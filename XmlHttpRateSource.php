@@ -6,17 +6,13 @@ class XmlHttpRateSource implements IConversionRateSource {
 	}
 	
 	public function getRates() {
-		$request = new HttpRequest($this->url, HttpRequest::METH_GET);
-	    $request->send();
-	    if ($request->getResponseCode() == 200) {
-	        return parse($request->getResponseBody());
-	    }
-		return array();
-	}
-	
-	protected function parse($response) {
+		$response = file_get_contents($this->url); #This really works?
 		$xml = new SimpleXMLElement($response);
-		return array_map($this->parseNode, $xml->conversion);
+		$rates = array();
+		foreach ($xml->conversion as $conversion) {
+			$rates[] = $this->parseNode($conversion);
+		}
+		return $rates;
 	}
 	
 	protected function parseNode($conversion) {

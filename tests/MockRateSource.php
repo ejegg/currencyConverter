@@ -6,6 +6,6 @@ class MockRateSource implements IConversionRateSource {
 	public $rates = array();
 	
 	public function getRates() {
-		return rates;
+		return $this->rates;
 	}
 }

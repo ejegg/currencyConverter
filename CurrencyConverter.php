@@ -20,7 +20,8 @@ class CurrencyConverter implements ICurrencyConverter {
 	}
 	
 	public function updateRates() {
-		
+		$rates = $this->rateSource->getRates();
+		$this->rateRepo->storeRates($rates);
 	}
 	
 	public function convert($amount, $to_currency = false) {

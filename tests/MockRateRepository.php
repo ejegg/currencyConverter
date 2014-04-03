@@ -7,7 +7,7 @@ class MockRateRepository implements IConversionRateRepository {
 	
 	public function storeRates(array $rates) {
 		foreach ($rates as $rate) {
-			$rateDict[$rate->from_currency] = $rate;
+			$this->rateDict[$rate->from_currency] = $rate;
 		}
 	}
 	

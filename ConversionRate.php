@@ -22,4 +22,11 @@ class ConversionRate {
 	 * UNIX timestamp indicating when this rate was considered current  
 	 */
 	public $timestamp;
+	
+	public function __construct($from_currency, $to_currency, $multiplier, $timestamp) {
+		$this->from_currency = $from_currency;
+		$this->to_currency = $to_currency;
+		$this->multiplier = $multiplier;
+		$this->timestamp = $timestamp; 
+	}
 }

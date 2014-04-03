@@ -9,6 +9,7 @@ interface ICurrencyConverter {
 	 */
 	public function updateRates();
 	/*
+	 * Note: currently rounds to the nearest hundredth.  Should actually round differently depending on output currency.
 	 * @param string $amount the ISO 4217 currency code of the input currency, a single space, and the number of units of that currency    
 	 * @param string $to_currency the ISO 4217 currency code of the output currency (optional)
 	 * @return string|bool false if valid rate not found, otherwise the ISO 4217 currency code of the output currency, a single space, and the number of units of that currency

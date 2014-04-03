@@ -1,5 +1,5 @@
 <?php
-require 'IConversionRateSource.php';
+require "IConversionRateSource.php";
 
 class MockRateSource implements IConversionRateSource {
 	

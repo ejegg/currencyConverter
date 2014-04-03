@@ -1,9 +1,15 @@
 <?php
-require 'MockRateRepository.php';
-require 'MockRateSource.php';
-require 'CurrencyConverter.php';
+require_once "PHPUnit/Autoload.php";
+require "MockRateRepository.php";
+require "MockRateSource.php";
+require "CurrencyConverter.php";
 
 class CurrencyConverterTest extends PHPUnit_Framework_TestCase {
+	
+	public static function main() { //allow self-execution
+		$tests = new PHPUnit_Framework_TestSuite(__CLASS__);
+		PHPUnit_TextUI_TestRunner::run($tests);
+	} 
 	
 	protected $rates;
 	
@@ -38,8 +44,10 @@ class CurrencyConverterTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 	
-	public function testConvert() {
+	public function testConvertRounding() {
 		$config = new ConverterConfiguration();
+		$config->default_output_currency = "USD";
+		$config->definitionsPath = "/home/elliott/src/php/CurrencyConverter/CurrencyDefinitions.xml";
 		$source = new MockRateSource();
 		$repo = new MockRateRepository();
 		$repo->storeRates($this->rates);
@@ -49,4 +57,21 @@ class CurrencyConverterTest extends PHPUnit_Framework_TestCase {
 		$result = $converter->convert("JPY 5000");
 		$this->assertEquals("USD 65.63", $result);
 	}
+	
+	public function testConvertInvertsRates() {
+		$config = new ConverterConfiguration();
+		$config->default_output_currency = "USD";
+		$source = new MockRateSource();
+		$repo = new MockRateRepository();
+		$repo->storeRates($this->rates);
+		
+		$converter = new CurrencyConverter($config, $source, $repo);
+		
+		$result = $converter->convert("USD 65.625", "JPY");
+		$this->assertEquals("JPY 5000", $result);
+	}
+}
+
+if (!defined('PHPUnit_MAIN_METHOD')) {
+	CurrencyConverterTest::main();
 }

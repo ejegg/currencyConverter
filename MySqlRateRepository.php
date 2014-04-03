@@ -29,12 +29,19 @@ class MySqlRateRepository implements IConversionRateRepository {
 	}
 	
 	public function getRate($from_currency, $to_currency, $newer_than = false) {
-		$query = "SELECT FromCurrency, ToCurrency, Multiplier, ValidTime " .
+		$query = "SELECT FromCurrency, ToCurrency, Multiplier, UNIX_TIMESTAMP(ValidTime) AS ValidTime " .
 			"FROM " . self::TABLE . " " .
 			"WHERE ( FromCurrency = :from AND ToCurrency = :to ) " .
 			"OR ( FromCurrency = :to AND ToCurrency = :from ) " .
 			"ORDER BY ValidTime DESC " .
 			"LIMIT 1";
+		$command = $this->db->prepare($query);
+		$command->bindValue(":from", $from_currency);
+		$command->bindValue(":to", $to_currency);
+		$row = $command->fetch();
+		if (!row) {
+			return false;
+		}
+		return new ConversionRate($row["FromCurrency"], $row["ToCurrency"], $row["Multiplier"], $row["ValidTime"]);		
 	}
-	
 }

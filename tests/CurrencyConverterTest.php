@@ -70,6 +70,21 @@ class CurrencyConverterTest extends PHPUnit_Framework_TestCase {
 		$result = $converter->convert("USD 65.625", "JPY");
 		$this->assertEquals("JPY 5000", $result);
 	}
+
+	public function testConvertBatch() {
+		$config = new ConverterConfiguration();
+		$config->default_output_currency = "USD";
+		$source = new MockRateSource();
+		$repo = new MockRateRepository();
+		$repo->storeRates($this->rates);
+	
+		$converter = new CurrencyConverter($config, $source, $repo);
+	
+		$result = $converter->convertBatch(array("JPY 5000", "ARS 100"));
+		$this->assertEquals(2, count($result));
+		$this->assertEquals("USD 65.63", $result[0]);
+		$this->assertEquals("USD 22.94", $result[1]);
+	}
 }
 
 if (!defined('PHPUnit_MAIN_METHOD')) {

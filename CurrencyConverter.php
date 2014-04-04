@@ -53,9 +53,10 @@ class CurrencyConverter implements ICurrencyConverter {
 	}
 		
 	public function convertBatch($amounts, $to_currency = false) {
-		$conv = function($amount) {
-			return $this->convert($amount, $to_currency);
+		$to_amounts = array();
+		foreach($amounts as $from_amount) {
+			$to_amounts[] = $this->convert($from_amount, $to_currency);
 		};
-		return array_map($conv, $amounts);
+		return $to_amounts;
 	}
 }
